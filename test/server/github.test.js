@@ -6,7 +6,6 @@ import { toGenericComment } from '../../common/util'
 import { GithubBranchProtectedError } from '../../server/service/GithubServiceError'
 
 describe('The Github service', () => {
-  let currentEnforceAdminsEnvVar
   let github
   const MOCK_COMMENTS = [
     {created_at: '2016-07-11T15:00:00Z', user: {login: 'foo'}},
