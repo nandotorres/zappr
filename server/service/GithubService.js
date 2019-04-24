@@ -489,7 +489,7 @@ export class GithubService {
   async protectBranch(user, repo, branch, statusCheck, accessToken) {
     const isProtected = await this.isBranchProtected(user, repo, branch, accessToken)
     if (!isProtected) {
-      const enforceAdmins = (nconf.get('ZAPPR_ENFORCE_ADMINS_ON_BRANCH_PROTECTION') === 'true')
+      const enforceAdmins = nconf.get('ZAPPR_ENFORCE_ADMINS_ON_BRANCH_PROTECTION') === 'true'
 
       debug(`ZAPPR_ENFORCE_ADMINS_ON_BRANCH_PROTECTION set to ${enforceAdmins}`)
       // set up new protection
