@@ -237,7 +237,7 @@ describe('The Github service', () => {
 
     it('protectBranch', async(done) => {
       try {
-        const enforceAdmins = JSON.parse(nconf.get('ZAPPR_ENFORCE_ADMINS_ON_BRANCH_PROTECTION') || 'true')        
+        const enforceAdmins = nconf.get('ZAPPR_ENFORCE_ADMINS_ON_BRANCH_PROTECTION') === 'true'        
         await github.protectBranch(USER, REPO, BRANCH, CHECK, TOKEN)
         expect(github.fetchPath.args).to.deep.equal([
           ['GET', `/repos/${USER}/${REPO}/branches/${BRANCH}`,

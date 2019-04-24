@@ -744,7 +744,7 @@ describe('API', () => {
 
     it('should update the existing hook and add a check', async(done) => {
       try {
-        const enforceAdmins = JSON.parse(nconf.get('ZAPPR_ENFORCE_ADMINS_ON_BRANCH_PROTECTION') || 'true')
+        const enforceAdmins = nconf.get('ZAPPR_ENFORCE_ADMINS_ON_BRANCH_PROTECTION') === 'true'
         const repos = (await request.get('/api/repos').expect(200)).body
         const id = repos[0].id
         // enable approval check
