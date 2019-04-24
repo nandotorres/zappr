@@ -6,16 +6,17 @@ import { toGenericComment } from '../../common/util'
 import { GithubBranchProtectedError } from '../../server/service/GithubServiceError'
 
 describe('The Github service', () => {
+  let currentEnforceAdminsEnvVar
   let github
   const MOCK_COMMENTS = [
     {created_at: '2016-07-11T15:00:00Z', user: {login: 'foo'}},
     {created_at: '2016-07-11T17:00:00Z', user: {login: 'bar'}}
   ]
 
-  beforeEach(() => {
+  beforeEach(() => {    
     github = new GithubService()
     github.fetchPath = sinon.stub()
-  })
+  }) 
 
   describe('#setCommitStatus', () => {
     const lengths = [130, 140, 150]
@@ -237,6 +238,7 @@ describe('The Github service', () => {
 
     it('protectBranch', async(done) => {
       try {
+        const enforceAdmins = JSON.parse(nconf.get('ZAPPR_ENFORCE_ADMINS_ON_BRANCH_PROTECTION') || 'true')        
         await github.protectBranch(USER, REPO, BRANCH, CHECK, TOKEN)
         expect(github.fetchPath.args).to.deep.equal([
           ['GET', `/repos/${USER}/${REPO}/branches/${BRANCH}`,
@@ -252,7 +254,7 @@ describe('The Github service', () => {
               },
               required_pull_request_reviews: null,
               restrictions: null,
-              enforce_admins: true
+              enforce_admins: enforceAdmins
             },
             TOKEN,
             HEADER]

@@ -489,6 +489,9 @@ export class GithubService {
   async protectBranch(user, repo, branch, statusCheck, accessToken) {
     const isProtected = await this.isBranchProtected(user, repo, branch, accessToken)
     if (!isProtected) {
+      const enforceAdmins = JSON.parse(nconf.get('ZAPPR_ENFORCE_ADMINS_ON_BRANCH_PROTECTION') || 'true')
+
+      debug(`ZAPPR_ENFORCE_ADMINS_ON_BRANCH_PROTECTION set to ${enforceAdmins}`)
       // set up new protection
       const url = API_URL_TEMPLATES.BRANCH_PROTECTION
                                    .replace('${owner}', user)
@@ -502,7 +505,7 @@ export class GithubService {
         },
         required_pull_request_reviews: null,
         restrictions: null,
-        enforce_admins: true
+        enforce_admins: enforceAdmins
       }
       debug(`${user}/${repo}: Protecting branch ${branch} with status check ${statusCheck}`)
       await this.fetchPath('PUT', url, payload, accessToken, {'Accept': BRANCH_PREVIEW_HEADER})
